@@ -69,7 +69,40 @@ def search_genres(db):
 
 def search_caster(db):
     os.system('cls')
-    input('3')
+    caster = db['name_basics']
+    principle = db['title_principles']
+
+    search = input("Please enter which caster you want to search: ")
+
+    find = caster.find({'primaryName': {'$regex': search, '$options': 'i'}})
+    finded = []
+    choice = []
+    index = 1
+    for each in find:
+        print(str(index) + '. ' + each.get('primaryName') + ': ' + ', '.join(each.get('primaryProfession')))
+        choice.append(str(index))
+        finded.append(each)
+        index = index + 1
+
+    print(choice)
+    print(finded)
+
+    which = input("Which caster you want to view (Enter the leading number): ")
+    while which not in choice:
+        print("The choice does not exist, please try again")
+        which = input("Which caster you want to view (Enter the leading number): ")
+
+    selected = finded[int(which)-1]
+    print(selected)
+
+    selected_nm = selected.get('nconst')
+    selected_tt = selected.get('knownForTitles')
+
+    find_movie = principle.find({'nconst': selected_nm})
+    print(find_movie)
+
+
+    input()
 
 
 def add_movie(db):
@@ -118,7 +151,6 @@ def main():
     except Exception as e:
         print("fail to connect ",location)
     menu(db)
-
 
 
 if __name__ == "__main__":
