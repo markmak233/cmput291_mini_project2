@@ -1,6 +1,7 @@
 from pymongo import MongoClient
 import sys,os
 
+
 def search_title(db):
     os.system('cls')
     title = db['title_basics']
@@ -24,7 +25,6 @@ def search_title(db):
         print(str(index) + ". " + str(each_result))
         choice.append(str(index))
         index = index + 1
-
     # select the movie
     select = input("Which movie you want to search (Enters the leading number): ")
     while select not in choice:
@@ -37,12 +37,12 @@ def search_title(db):
     # get the rating
     find_rating = rating.find({'tconst': selected_tt}, {'_id': 0, 'averageRating': 1, 'numVotes': 1})
     for f in find_rating:
-        print('Movie title: ' + selected.get('primaryTitle') + '\nRating: ' + f.get('averageRating') +
+        print('\nMovie title: ' + selected.get('primaryTitle') + '\nRating: ' + f.get('averageRating') +
               '\nNumber of votes: ' + f.get('numVotes'))
 
     character(selected_tt, db)
 
-    input("Press enter to continue. ")
+    input("\n\nPress enter to return to main menu.")
 
 
 def character(tt, db):
