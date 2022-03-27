@@ -26,10 +26,10 @@ def search_title(db):
         choice.append(str(index))
         index = index + 1
     # select the movie
-    select = input("Which movie you want to search (Enters the leading number): ")
+    select = input("\nWhich movie you want to search (Enters the leading number): ")
     while select not in choice:
         print("The number input exceed the limit! Please try again.")
-        select = input("Which movie you want to search (Enters the leading number): ")
+        select = input("\nWhich movie you want to search (Enters the leading number): ")
 
     selected = find_list[int(select)-1]
     selected_tt = selected.get('tconst')
@@ -70,39 +70,71 @@ def search_genres(db):
 def search_caster(db):
     os.system('cls')
     caster = db['name_basics']
-    principle = db['title_principles']
+    principle = db['title_principals']
+    basics = db['title_basics']
 
     search = input("Please enter which caster you want to search: ")
-
     find = caster.find({'primaryName': {'$regex': search, '$options': 'i'}})
     finded = []
     choice = []
     index = 1
     for each in find:
-        print(str(index) + '. ' + each.get('primaryName') + ': ' + ', '.join(each.get('primaryProfession')))
+        l = each.get('primaryProfession')
+        if type(l) != list:
+            print(str(index) + '. ' + each.get('primaryName') + ': ' + l)
+        else:
+            print(str(index) + '. ' + each.get('primaryName') + ': ' + ', '.join(l))
         choice.append(str(index))
         finded.append(each)
         index = index + 1
 
-    print(choice)
-    print(finded)
 
-    which = input("Which caster you want to view (Enter the leading number): ")
+
+    which = input("\nWhich caster you want to view (Enter the leading number): ")
     while which not in choice:
         print("The choice does not exist, please try again")
-        which = input("Which caster you want to view (Enter the leading number): ")
+        which = input("\nWhich caster you want to view (Enter the leading number): ")
 
     selected = finded[int(which)-1]
-    print(selected)
 
     selected_nm = selected.get('nconst')
-    selected_tt = selected.get('knownForTitles')
 
-    find_movie = principle.find({'nconst': selected_nm})
-    print(find_movie)
+    find_movie = principle.find({'nconst': selected_nm}, {'_id': 0, 'job': 1, 'characters': 1, 'tconst': 1})
 
+    print("\nThis caster have jobs in the movie: ")
+    for f in find_movie:
+        title = f.get('tconst')
+        find_title = basics.find({'tconst': title}, {'_id': 0, 'primaryTitle': 1})
+        for i in find_title:
+            characters = f.get('characters')
+            job = f.get('job')
+            if characters == 'NULL':
+                print("Movie Title: " + i.get('primaryTitle') +
+                      "\nJob: " + job
+                      )
 
-    input()
+            elif job == 'NULL':
+                if type(characters) != list:
+                    print("Movie Title: " + i.get('primaryTitle') +
+                          "\nCharacters: " + f.get('characters'))
+                else:
+                    print("Movie Title: " + i.get('primaryTitle') +
+                            "\nCharacters: " + ', '.join(f.get('characters')))
+
+            else:
+                if type(characters) != list:
+                    print("Movie Title: " + i.get('primaryTitle') +
+                          "\nJob: " + job +
+                          "\nCharacters: " + f.get('characters')
+                          )
+                else:
+                    print("Movie Title: " + i.get('primaryTitle') +
+                            "\nJob: " + job +
+                            "\nCharacters: " + ', '.join(f.get('characters'))
+                    )
+        print('\n')
+
+    input("\nPress enter to return to the main menu.")
 
 
 def add_movie(db):
