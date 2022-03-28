@@ -79,11 +79,6 @@ def character(tt, db):
 
 
 def search_genres(db):
-    from pymongo import MongoClient
-import json,time
-import sys,os
-
-def p2q2(db):
     # set up user input 
     user_sel=None
     user_input=['','0']
