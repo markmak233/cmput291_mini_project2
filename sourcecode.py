@@ -21,6 +21,11 @@ def search_title(db):
     for each_find in find:
         find_list.append(each_find)
 
+    if len(find_list) == 0:
+        input("Invalid input!  \nPlease try to re-enter.")
+        os.system('cls')
+        search_title(db)
+
     # putting ordering at the front of each movie
     choice = []
     index = 1
@@ -53,19 +58,24 @@ def character(tt, db):
     principals = db['title_principals']
     caster = db['name_basics']
     # find the corresponding principals of the seleted movie
-    find_character = principals.find({'tconst': tt}, {'_id': 0, 'nconst': 1, 'characters': 1})
+    find_character = principals.find({'tconst': tt}, {'_id': 0, 'nconst': 1, 'job': 1, 'characters': 1})
     for each in find_character:
         nm = each.get('nconst')
-        check = each.get('characters')
+        check_char = each.get('characters')
+        job_check = each.get('job')
         # find the name for caster
         find_caster = caster.find({'nconst': nm}, {'_id': 0, 'primaryName': 1})
-        if check != 'NULL':
+        if check_char != 'NULL':
             for name in find_caster:
                 # one cast might play multi roles, print it separately to avoid error
-                if type(check) != list:
-                    print(name.get('primaryName') + ' plays the role of ' + check)
+                if type(check_char) != list:
+                    print(name.get('primaryName') + ' plays the role of ' + check_char)
                 else:
-                    print(name.get('primaryName') + ' plays the role of ' + ', '.join(check))
+                    print(name.get('primaryName') + ' plays the role of ' + ', '.join(check_char))
+        elif job_check != 'NULL':
+            for name in find_caster:
+                print(name.get('primaryName') + ' have a job of ' + job_check)
+
 
 
 def search_genres(db):
@@ -94,6 +104,11 @@ def search_caster(db):
         choice.append(str(index))
         finded.append(each)
         index = index + 1
+
+    if len(finded) == 0:
+        input("Invalid input! \nPlease try to re-enter.")
+        os.system('cls')
+        search_caster(db)
 
     which = input("\nWhich caster you want to view (Enter the leading number): ")
     while which not in choice:
@@ -156,6 +171,8 @@ def add_castre(db):
 def menu(db):
     while db is not None:
         print('''
+        User Menu:
+        
         1.Search for titles 
         2.Search for genres
         3.Search for cast/crew members
