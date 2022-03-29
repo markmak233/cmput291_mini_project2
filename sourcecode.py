@@ -21,11 +21,10 @@ def search_title(db):
     for each_find in find:
         find_list.append(each_find)
 
-    print(find_list)
     if len(find_list) == 0:
         input("Invalid input!  \nPlease try to re-enter.")
         os.system('clear')
-        search_title(db)
+        return
 
     # putting ordering at the front of each movie
     choice = []
@@ -54,7 +53,7 @@ def search_title(db):
 
     input("\n\nPress enter to return to main menu.")
     os.system('clear')
-    menu(db)
+    return
 
 
 def character(tt, db):
@@ -181,11 +180,8 @@ def search_genres(db):
         }
     }
 ]
-    print('your result will be coming shortly.....')
-    a=time.time()
+    print('your result will be coming shortly.....(est. 5 seconds)')
     result=list(collection.aggregate(qurry)) 
-    print('The result fetched in ',time.time() - a,' seconds, faster than 99% of computer on this plannet')
-    input()
     # if not result it will be told a returned
     if len(result) == 0:
         print('No results return')
@@ -281,9 +277,14 @@ def search_caster(db):
     # print the caster with their profession and let user choice
     for each in find:
         l = each.get('primaryProfession')
-        if type(l) != list:
+        print(l,type(l),len(l))
+        if len(l) == 0:
+            print(str(index) + '. ' + each.get('primaryName') + ':no profession')
+        elif type(l) != list:
+            print('0')
             print(str(index) + '. ' + each.get('primaryName') + ': ' + l)
-        else:
+        else :
+            print('2')
             print(str(index) + '. ' + each.get('primaryName') + ': ' + ', '.join(l))
         choice.append(str(index))
         finded.append(each)
@@ -292,7 +293,7 @@ def search_caster(db):
     if len(finded) == 0:
         input("Invalid input! \nPlease try to re-enter.")
         os.system('clear')
-        search_caster(db)
+        return
 
     which = input("\nWhich caster you want to view (Enter the leading number): ")
     while which not in choice:
@@ -341,7 +342,7 @@ def search_caster(db):
 
     input("\nPress enter to return to the main menu.")
     os.system('clear')
-    menu(db)
+    return
 
 
 def add_movie(db):
@@ -489,6 +490,7 @@ def add_castre(db):
 
 def menu(db):
     while db is not None:
+        os.system('clear')
         print('''
         User Menu:
         
