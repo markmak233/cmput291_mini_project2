@@ -1,6 +1,5 @@
 from pymongo import MongoClient
 import sys,os
-import time
 
 
 def search_title(db):
@@ -80,6 +79,11 @@ def character(tt, db):
 
 
 def search_genres(db):
+    from pymongo import MongoClient
+import json,time
+import sys,os
+
+def p2q2(db):
     # set up user input 
     user_sel=None
     user_input=['','0']
@@ -343,12 +347,145 @@ def search_caster(db):
 
 def add_movie(db):
     os.system('cls')
-    input('4')
+    
+
+    title_basics_collection = db.get_collection("title_basics")
+    #add movie
+    try:
+        #ask user to input info for the movie
+        print("Please input the infomation for the movie:")
+        movie_id = input("movie_id:")
+        title = input("movie_title:")
+        start_year = input("start_year:")
+        running_time = input("running_time:")
+        temp = input("a_list_of_geners:(Please use ',' to separate every genres)")
+        a_list_of_genres = temp.split(sep = ',')
+        col = {"tconst":movie_id,
+            "titleType":"movie",
+            "primaryTitle":title,
+            "originalTitle":title,
+            "isAdult":"Null",
+            "startYear":start_year,
+            "endYear":"Null",
+            "runtimeMinutes":running_time,
+            "geners":a_list_of_genres
+            }
+        result = title_basics_collection.insert_one(col)
+        print(result.inserted_id)
+    except Exception as e:
+        print("Error{}".format(e))
 
 
 def add_castre(db):
     os.system('cls')
-    input('5')
+    
+    title_principals_collection = db.get_collection("title_principals")
+    title_basics_collection = db.get_collection("title_basics")
+    name_basics_collection = db.get_collection("name_basics")
+
+    #user input
+
+    try:
+        #enter a mem id and check whether it exists in name collection
+        
+        member_id = input("Please enter Info for a cast/crew member: \nMember_id:")
+        queryCondition1 = {"nconst":member_id}
+        related_name = name_basics_collection.find(queryCondition1)
+        find_list = []
+        for i in related_name:
+            find_list.append(i)
+        while(len(find_list) == 0):
+            input("Invalid input! There doesn't exist same member_id in name_basics_collection \nPlease try to re-enter.")
+            os.system('cls')
+
+            
+            member_id = input("Please enter Info for a cast/crew member: \nMember_id:")
+            queryCondition1 = {"nconst":member_id}
+            related_name = name_basics_collection.find(queryCondition1)
+            find_list = []
+            for i in related_name:
+                find_list.append(i)
+        #enter a title id and check whether it exists in title collection
+        title_id = input("title_id:")
+        queryCondition2 = {"tconst":title_id}
+        related_title = title_basics_collection.find(queryCondition2)
+        find_list = []
+        for i in related_title:
+            find_list.append(i)
+        while(len(find_list) == 0):
+            input("Invalid input! There doesn't exist same title_id in title_basics_collection \nPlease try to re-enter.")
+            os.system('cls')
+            print("Please enter Info for a cast/crew member: \nmember_id:",member_id)
+            title_id = input("title_id:")
+            queryCondition2 = {"tconst":title_id}
+            related_title = title_basics_collection.find(queryCondition2)
+            find_list = []
+            for i in related_title:
+                find_list.append(i)
+
+        a_category = input("Category:")
+        
+
+
+        #find max order
+        
+        related_title = title_principals_collection.find(queryCondition2)
+        find_list = []
+        for i in related_title:
+            find_list.append(int(i.get('ordering')))
+        if(len(find_list) == 0):
+            correct_max_order = 1
+        else:
+            correct_max_order = str(max(find_list) + 1)
+        print("ordering:",correct_max_order)
+        
+        
+        temp = input("/////////////////////////////////\nDo you want to insert more infomation for the crew member, such as 'job' and 'characters'?. \nPlease enter 'Y/y' for 'Yes' AND 'N/n' for 'No'.\n(If say no, they will be set to 'Null' by default).\nYour choice:")
+        temp1 = True
+        while(temp1):
+
+            if(temp == 'Y' or temp =='y'):
+                os.system('cls')
+                print("Please enter Info for a cast/crew member: \nmember_id:",member_id,"\ntitle_id:",title_id,"\nordering:",correct_max_order,"\ncategory:",a_category)
+
+                temp_job = input("member's job:")
+                temp_char = input("member's characters:")
+
+                col = {"tconst":title_id,
+                    "ordering":correct_max_order,
+                    "nconst":member_id,
+                    "category":a_category,
+                    "job" : "Null",
+                    "characters" : "Null"
+                    }
+                temp1 = False
+            elif(temp == 'N' or temp == 'n'):
+                col = {"tconst":title_id,
+                "ordering":correct_max_order,
+                "nconst":member_id,
+                "category":a_category,
+                "job" : "Null",
+                "characters" : "Null"
+                }
+                temp1 = False
+            else:
+                input("Please input valid character. Press enter to re-enter.")
+                os.system('cls')
+                print("Please enter Info for a cast/crew member: \nmember_id:",member_id,"\ntitle_id:",title_id,"\nordering:",correct_max_order,"\ncategory:",a_category)
+
+                temp = input("Do you want to insert info of 'job' and 'characters' for the cast/crew member. \nplease enter 'Y/y' OR 'N/n'.\n If no, they will be set to 'Null'")
+
+        result = title_principals_collection.insert_one(col)
+        input("Info is inserted successfully! Please press 'Enter' back to the menu.")
+        os.system('cls')
+
+    
+
+
+
+
+    except Exception as e:
+        print("Error".format(e))
 
 
 def menu(db):
