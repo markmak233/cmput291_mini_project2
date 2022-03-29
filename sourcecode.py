@@ -3,7 +3,7 @@ import sys,os
 
 
 def search_title(db):
-    os.system('cls')
+    os.system('clear')
     title = db['title_basics']
     rating = db['title_ratings']
 
@@ -23,7 +23,7 @@ def search_title(db):
 
     if len(find_list) == 0:
         input("Invalid input!  \nPlease try to re-enter.")
-        os.system('cls')
+        os.system('clear')
         search_title(db)
 
     # putting ordering at the front of each movie
@@ -79,11 +79,6 @@ def character(tt, db):
 
 
 def search_genres(db):
-    from pymongo import MongoClient
-import json,time
-import sys,os
-
-def p2q2(db):
     # set up user input 
     user_sel=None
     user_input=['','0']
@@ -92,9 +87,9 @@ def p2q2(db):
     # a while loop until user fill in everything
     while not submited:
         # clear screen change
-        # powershell cls
+        # powershell clear
         # linux clear
-        os.system('cls')
+        os.system('clear')
         # printing heading
         print('input a genre and min vote number\n1:genre \t {}'.format(user_input[0]))
         print('2:min vote: \t {} \n3:submit \n4:back to main menu'.format(user_input[1]))
@@ -212,7 +207,7 @@ def datadisplay(result):
     user_selection=None
 
     while user_selection!= '3':
-        os.system('cls')
+        os.system('clear')
         string=''
         for i in range(len(a)):
             if a[i] in ['primaryTitle']:
@@ -271,7 +266,7 @@ def datadisplay(result):
 
 
 def search_caster(db):
-    os.system('cls')
+    os.system('clear')
     caster = db['name_basics']
     principle = db['title_principals']
     basics = db['title_basics']
@@ -294,7 +289,7 @@ def search_caster(db):
 
     if len(finded) == 0:
         input("Invalid input! \nPlease try to re-enter.")
-        os.system('cls')
+        os.system('clear')
         search_caster(db)
 
     which = input("\nWhich caster you want to view (Enter the leading number): ")
@@ -346,7 +341,7 @@ def search_caster(db):
 
 
 def add_movie(db):
-    os.system('cls')
+    os.system('clear')
     
 
     title_basics_collection = db.get_collection("title_basics")
@@ -377,7 +372,7 @@ def add_movie(db):
 
 
 def add_castre(db):
-    os.system('cls')
+    os.system('clear')
     
     title_principals_collection = db.get_collection("title_principals")
     title_basics_collection = db.get_collection("title_basics")
@@ -396,7 +391,7 @@ def add_castre(db):
             find_list.append(i)
         while(len(find_list) == 0):
             input("Invalid input! There doesn't exist same member_id in name_basics_collection \nPlease try to re-enter.")
-            os.system('cls')
+            os.system('clear')
 
             
             member_id = input("Please enter Info for a cast/crew member: \nMember_id:")
@@ -414,7 +409,7 @@ def add_castre(db):
             find_list.append(i)
         while(len(find_list) == 0):
             input("Invalid input! There doesn't exist same title_id in title_basics_collection \nPlease try to re-enter.")
-            os.system('cls')
+            os.system('clear')
             print("Please enter Info for a cast/crew member: \nmember_id:",member_id)
             title_id = input("title_id:")
             queryCondition2 = {"tconst":title_id}
@@ -445,7 +440,7 @@ def add_castre(db):
         while(temp1):
 
             if(temp == 'Y' or temp =='y'):
-                os.system('cls')
+                os.system('clear')
                 print("Please enter Info for a cast/crew member: \nmember_id:",member_id,"\ntitle_id:",title_id,"\nordering:",correct_max_order,"\ncategory:",a_category)
 
                 temp_job = input("member's job:")
@@ -470,14 +465,14 @@ def add_castre(db):
                 temp1 = False
             else:
                 input("Please input valid character. Press enter to re-enter.")
-                os.system('cls')
+                os.system('clear')
                 print("Please enter Info for a cast/crew member: \nmember_id:",member_id,"\ntitle_id:",title_id,"\nordering:",correct_max_order,"\ncategory:",a_category)
 
                 temp = input("Do you want to insert info of 'job' and 'characters' for the cast/crew member. \nplease enter 'Y/y' OR 'N/n'.\n If no, they will be set to 'Null'")
 
         result = title_principals_collection.insert_one(col)
         input("Info is inserted successfully! Please press 'Enter' back to the menu.")
-        os.system('cls')
+        os.system('clear')
 
     
 
