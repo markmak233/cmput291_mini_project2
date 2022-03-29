@@ -21,6 +21,7 @@ def search_title(db):
     for each_find in find:
         find_list.append(each_find)
 
+    print(find_list)
     if len(find_list) == 0:
         input("Invalid input!  \nPlease try to re-enter.")
         os.system('clear')
@@ -52,6 +53,8 @@ def search_title(db):
     character(selected_tt, db)
 
     input("\n\nPress enter to return to main menu.")
+    os.system('clear')
+    menu(db)
 
 
 def character(tt, db):
@@ -75,7 +78,6 @@ def character(tt, db):
         elif job_check != 'NULL':
             for name in find_caster:
                 print(name.get('primaryName') + ' have a job of ' + job_check)
-
 
 
 def search_genres(db):
@@ -338,6 +340,8 @@ def search_caster(db):
         print('\n')
 
     input("\nPress enter to return to the main menu.")
+    os.system('clear')
+    menu(db)
 
 
 def add_movie(db):
