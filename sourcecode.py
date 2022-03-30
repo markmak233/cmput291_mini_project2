@@ -346,7 +346,7 @@ def search_caster(db):
 
 
 def add_movie(db):
-    os.system('clear')
+    os.system('cls')
     
 
     title_basics_collection = db.get_collection("title_basics")
@@ -354,11 +354,65 @@ def add_movie(db):
     try:
         #ask user to input info for the movie
         print("Please input the infomation for the movie:")
+        
         movie_id = input("movie_id:")
+        queryCondition2 = {"tconst":movie_id}
+        related_title = title_basics_collection.find(queryCondition2)
+        find_list = []
+        for i in related_title:
+            find_list.append(i)
+        while(movie_id == "" or len(find_list) != 0):
+            os.system('cls')
+            if(len(find_list) != 0):
+                input("The movie id isn't unique please re-enter")
+                os.system('cls')
+            print("Please input the infomation for the movie:")
+            movie_id = input("movie_id:")
+            queryCondition2 = {"tconst":movie_id}
+            related_title = title_basics_collection.find(queryCondition2)
+            find_list = []
+            for i in related_title:
+                find_list.append(i)
+
+
         title = input("movie_title:")
+        while(title == ""):
+            os.system('cls')
+            print("Please input the infomation for the movie:")
+            print("movie_id:",movie_id)
+            title = input("movie_title:")
+        
         start_year = input("start_year:")
+        while(start_year == ""):
+            os.system('cls')
+            print("Please input the infomation for the movie:")
+            print("movie_id:",movie_id)
+            print("movie_title:",title)
+            start_year = input("start_year:")
+
         running_time = input("running_time:")
-        temp = input("a_list_of_geners:(Please use ',' to separate every genres)")
+        while(running_time == ""):
+            os.system('cls')
+            print("Please input the infomation for the movie:")
+            print("movie_id:",movie_id)
+            print("movie_title:",title)
+            print("start_year:",start_year)
+            running_time = input("running_time:")
+
+
+
+        temp = input("a_list_of_geners(Please use ',' to separate every genres):")
+        while(temp == ""):
+            os.system('cls')
+            print("Please input the infomation for the movie:")
+            print("movie_id:",movie_id)
+            print("movie_title:",title)
+            print("start_year:",start_year)
+            print("running_time:",running_time)
+            temp = input("a_list_of_geners(Please use ',' to separate every genres):")
+            
+
+
         a_list_of_genres = temp.split(sep = ',')
         col = {"tconst":movie_id,
             "titleType":"movie",
@@ -371,13 +425,13 @@ def add_movie(db):
             "geners":a_list_of_genres
             }
         result = title_basics_collection.insert_one(col)
-        print(result.inserted_id)
+        input("Movie is added successfully.Please press 'enter' back to menu.")
     except Exception as e:
         print("Error{}".format(e))
 
 
 def add_castre(db):
-    os.system('clear')
+    os.system('cls')
     
     title_principals_collection = db.get_collection("title_principals")
     title_basics_collection = db.get_collection("title_basics")
@@ -396,7 +450,7 @@ def add_castre(db):
             find_list.append(i)
         while(len(find_list) == 0):
             input("Invalid input! There doesn't exist same member_id in name_basics_collection \nPlease try to re-enter.")
-            os.system('clear')
+            os.system('cls')
 
             
             member_id = input("Please enter Info for a cast/crew member: \nMember_id:")
@@ -414,7 +468,7 @@ def add_castre(db):
             find_list.append(i)
         while(len(find_list) == 0):
             input("Invalid input! There doesn't exist same title_id in title_basics_collection \nPlease try to re-enter.")
-            os.system('clear')
+            os.system('cls')
             print("Please enter Info for a cast/crew member: \nmember_id:",member_id)
             title_id = input("title_id:")
             queryCondition2 = {"tconst":title_id}
@@ -424,6 +478,11 @@ def add_castre(db):
                 find_list.append(i)
 
         a_category = input("Category:")
+        while(a_category == ""):
+            os.system('cls')
+            print("Please enter Info for a cast/crew member: \nmember_id:",member_id)
+            print("title_id:",title_id)
+            a_category = input("Category:")
         
 
 
@@ -445,7 +504,7 @@ def add_castre(db):
         while(temp1):
 
             if(temp == 'Y' or temp =='y'):
-                os.system('clear')
+                os.system('cls')
                 print("Please enter Info for a cast/crew member: \nmember_id:",member_id,"\ntitle_id:",title_id,"\nordering:",correct_max_order,"\ncategory:",a_category)
 
                 temp_job = input("member's job:")
@@ -470,14 +529,14 @@ def add_castre(db):
                 temp1 = False
             else:
                 input("Please input valid character. Press enter to re-enter.")
-                os.system('clear')
+                os.system('cls')
                 print("Please enter Info for a cast/crew member: \nmember_id:",member_id,"\ntitle_id:",title_id,"\nordering:",correct_max_order,"\ncategory:",a_category)
 
                 temp = input("Do you want to insert info of 'job' and 'characters' for the cast/crew member. \nplease enter 'Y/y' OR 'N/n'.\n If no, they will be set to 'Null'")
 
         result = title_principals_collection.insert_one(col)
         input("Info is inserted successfully! Please press 'Enter' back to the menu.")
-        os.system('clear')
+        os.system('cls')
 
     
 
@@ -486,8 +545,6 @@ def add_castre(db):
 
     except Exception as e:
         print("Error".format(e))
-
-
 def menu(db):
     while db is not None:
         os.system('clear')
