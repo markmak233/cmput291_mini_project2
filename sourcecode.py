@@ -8,7 +8,7 @@ def search_title(db):
     rating = db['title_ratings']
 
     # asking for title name
-    search = input("Please enter what title you want to search (all variable should be separated by space): ").split()
+    search = input("Please enter what title you want to search (all variable should be separated by comma): ").split(',')
     # combine the input into a key for search
     key = '\"\"'
     key = "\"" + key.join(search) + "\""
@@ -30,7 +30,7 @@ def search_title(db):
     choice = []
     index = 1
     for each_result in find_list:
-        print(str(index) + ". " + str(each_result))
+        print(str(index) + ". " + str(each_result) + '\n')
         choice.append(str(index))
         index = index + 1
     # select the movie
@@ -175,7 +175,7 @@ def search_genres(db):
     result=list(collection.aggregate(qurry)) 
     # if not result it will be told a returned
     if len(result) == 0:
-        input('No results return ')
+        input('No results return')
     else:
         datadisplay(result)
     db.title_ratings.drop_index('tconst_-1')

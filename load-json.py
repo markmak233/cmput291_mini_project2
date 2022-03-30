@@ -48,6 +48,8 @@ if __name__ == "__main__":
         try:
             location='mongodb://localhost:'+str(int(sys.argv[1]))
             client = MongoClient(location)
+            if "291db" in client.list_databases():
+                db=client["291db"].drop()
             db=client["291db"]
         except:
             print("fail to connect mongoDB server")
