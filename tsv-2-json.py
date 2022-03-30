@@ -8,7 +8,7 @@ def tsv2json(input_file,output_file):
         a = file.readline()
     except:
         print("failed to open {}.".format(input_file))
-      
+    
     # The first line consist of headings of the record 
     # so we will store it in an array and move to 
     # next line in input_file.
@@ -26,7 +26,7 @@ def tsv2json(input_file,output_file):
             else:
                 # Convert each row into dictionary with keys as titles
                 d[t] = f.strip()
-              
+            
         # we will use strip to remove '\n'.
         arr.append(d)
         # we will append all the individual dictionaires into list 
@@ -37,7 +37,7 @@ def tsv2json(input_file,output_file):
     except Exception as e:
         print(e)
     print("output_file",output_file)
-  
+
 # user input
 # if typed python3 tsv-2-json.py
 # it will us: python3 transfer_off.py name.basics.tsv title.basics.tsv title.principals.tsv title.ratings.tsv

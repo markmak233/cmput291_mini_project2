@@ -84,7 +84,6 @@ def search_genres(db):
     user_sel=None
     user_input=['','0']
     submited=False
-    valid_input1=list(range(ord('a'),ord('z')))+list(range(ord('A'),ord('Z')))
     # a while loop until user fill in everything
     while not submited:
         # clear screen change
@@ -99,15 +98,6 @@ def search_genres(db):
         # check selection type/submit or back
         if user_sel == '1': #genre
             user_input[0]=input('> ')
-            flaginput=False
-            # validate input
-            for i in range(len(user_input[0])):
-                if ord(user_input[0][i]) not in valid_input1:
-                    flaginput=True
-                # fail clean input
-                if flaginput: 
-                    input('expecting a-z or A-Z,but something else found')
-                    user_input[0]=''
         elif user_sel == '2':  # min vore
             user_input[1]=input('> ')
             try:
@@ -131,6 +121,7 @@ def search_genres(db):
     collection = db['title_ratings']
     index_name=list(collection.index_information().keys())
     index_name.remove("_id_")
+    # drop any table previously
     if len(index_name)!=0:
         for i in range(len(index_name)):
             collection.drop_index(index_name[i])
@@ -184,7 +175,7 @@ def search_genres(db):
     result=list(collection.aggregate(qurry)) 
     # if not result it will be told a returned
     if len(result) == 0:
-        print('No results return')
+        input('No results return ')
     else:
         datadisplay(result)
     db.title_ratings.drop_index('tconst_-1')
@@ -196,7 +187,7 @@ def datadisplay(result):
     a=list(result[0].keys())
     a.remove('_id')
 
-
+    # set up page limit
     current_pg=0
     per_page=20
     max_pg=int(len(result)/per_page)
@@ -204,9 +195,11 @@ def datadisplay(result):
         max_pg+=1
     user_selection=None
 
+    # display loop
     while user_selection!= '3':
         os.system('clear')
         string=''
+        # set up different length some long tittle
         for i in range(len(a)):
             if a[i] in ['primaryTitle']:
                 string=string+'{:<48} '.format(str(a[i]))
@@ -216,7 +209,7 @@ def datadisplay(result):
                 string=string+'{:<12} '.format(str(a[i]))
         print(string)
 
-
+        # load information
         start=per_page*current_pg
         end=per_page*(current_pg+1)
         if end>len(result):
@@ -224,6 +217,7 @@ def datadisplay(result):
 
         for index in range(start,end):
             string=''
+            # information per line
             for i in range(len(a)):
                 substring=''
                 if a[i]=='genres':
@@ -235,6 +229,7 @@ def datadisplay(result):
                 else:
                     substring+=str(result[index][a[i]])+' '
                 
+                # avoid text overflow
                 if a[i] in ['primaryTitle']:
                     if len(substring)<48:
                         string=string+'{:<48} '.format(str(substring))
@@ -250,8 +245,9 @@ def datadisplay(result):
                         string=string+'{:<12} '.format(str(substring))
                     else:
                         string=string+'{:<10}.. '.format(str(substring[:10]))
-
             print(string)
+
+        # let user input page flip
         print('result of {} to {} in page ({}/{})'.format(start, end, current_pg,max_pg))
         print('\n1:nextpage\n2:last page\n3:go back')
         user_selection=input('> ')
@@ -580,9 +576,13 @@ def main():
     try:
         location='mongodb://localhost:'+str(int(sys.argv[1]))
         client = MongoClient(location)
+        # test connection
+        print(client.server_info())
         db = client["291db"]
+        MongoClient(location)
     except Exception as e:
         print("fail to connect ",location)
+        return
     menu(db)
 
 
